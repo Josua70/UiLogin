@@ -1,5 +1,12 @@
+import 'dart:async';
+import 'dart:convert';
+import 'dart:html';
+
+import 'package:contoh/Model/ListModel.dart';
 import 'package:flutter/material.dart';
 import 'Model/DataBulan.dart';
+import 'package:http/http.dart' as http;
+
 
 
 class screen3 extends StatefulWidget {
@@ -10,22 +17,24 @@ class screen3 extends StatefulWidget {
 }
 
 class _screen3State extends State<screen3> {
-  // final List bulan = [
-  //   "Januari",
-  //   "Fabruari",
-  //   "Maret",
-  //   "April",
-  //   "Mei",
-  //   "Juni",
-  //   "Juli",
-  //   "Agustus",
-  //   "September",
-  //   "Oktober",
-  //   "November",
-  //   "Desember"
-  // ];
+  final List bulan = [
+    "Januari",
+    "Fabruari",
+    "Maret",
+    "April",
+    "Mei",
+    "Juni",
+    "Juli",
+    "Agustus",
+    "September",
+    "Oktober",
+    "November",
+    "Desember"
+  ];
 
   List<DataBulan> dataBulan = [];
+
+
 
   void setData() {
     dataBulan.add(DataBulan(namaBulan: "Produk 1", descriptonBulan: "Stop Kontak", image: "https://images.tokopedia.net/img/cache/300-square/VqbcmM/2021/7/9/75694678-7783-4368-a3a9-be995260e33c.png.webp?ect=4g"));
@@ -38,10 +47,41 @@ class _screen3State extends State<screen3> {
     dataBulan.add(DataBulan(namaBulan: "Produk 8", descriptonBulan: "Kaos Kaki", image: "https://images.tokopedia.net/img/cache/200-square/product-1/2020/7/21/9349632/9349632_520a819a-bfd7-4780-b4c3-20029e51063c_1080_1080.webp?ect=4g"));
     dataBulan.add(DataBulan(namaBulan: "Produk 9", descriptonBulan: "Sunlight", image: "https://images.tokopedia.net/img/cache/200-square/VqbcmM/2021/5/31/8ac36e37-d991-4997-82a7-e5eef677243e.jpg.webp?ect=4g"));
   }
+  List<Data> dataListApi = [];
+  final String apiUrl = "https://reqres.in/api/users?per_page=15";
+
+  Future<ListModel> getListRepository(BuildContext context) async {
+    var uri = Uri.parse(apiUrl).replace();
+    try {
+      final response = await http
+          .get(uri, headers: {})
+          .timeout(const Duration(seconds: 30));
+      if (response.statusCode == HttpStatus.ok){
+        print(jsonDecode(response.body));
+        return ListModel.FromJson(jsonDecode(response.body));
+      }else{
+        return ListModel.withError("Gagal load data");
+      }
+    } on TimeoutException catch (_) {
+      return ListModel.withError("Waktu habis, silahkan coba kembali");
+    }
+  }
+
+  void getListViewModel(BuildContext) async {
+    final response = await getListRepository(context);
+    if (response.error == null) {
+      setState(() {
+        dataListApi = response.data!;
+      });
+    } else{
+      print(response.error.toString());
+    }
+  }
 
   @override
   void initState() {
-    setData();
+    // setData();
+    getListViewModel(context);
     super.initState();
   }
 
@@ -68,7 +108,7 @@ class _screen3State extends State<screen3> {
                     child: ListView.builder(
                       shrinkWrap: true,
                       scrollDirection: Axis.horizontal,
-                      itemCount: dataBulan.length,
+                      itemCount: dataListApi.length,
                       itemBuilder: (context, index) {
                         return InkWell(
                           onTap: () {
@@ -84,11 +124,12 @@ class _screen3State extends State<screen3> {
                                   child: Column(
                                     children: [
                                       // Image.asset("assets/google_icon.png", width: 70, height: 70,),
-                                       const SizedBox(height: 8,),
-                                      Text(dataBulan[index].namaBulan, style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
                                       const SizedBox(height: 8,),
-                                      Text(dataBulan[index].descriptonBulan),
-                                      Image.network(dataBulan[index].image),
+                                      Image.network(dataListApi[index].avatar.toString(), width: 70, height: 70,),
+                                      const SizedBox(height: 8,),
+                                      Text(dataListApi[index].first_name.toString(), style: const TextStyle(fontSize: 14, fontWeight: FontWeight.bold)),
+                                      const SizedBox(height: 8,),
+                                      Text(dataListApi[index].email.toString()),
                                     ],
                                   ),
                                 ),
@@ -109,28 +150,21 @@ class _screen3State extends State<screen3> {
                   itemBuilder: (context, index) {
                     return Card(
                       child: Container(
-                        margin: const EdgeInsets.all(8),
+                        margin:  const EdgeInsets.all(8),
                         child: Row(
                           children: [
-                            // Image.asset("assets/google_icon.png", width: 70, height: 70,),
-                            const SizedBox(width: 12,),
-                            Row(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Image.network(dataBulan[index].image, width: 70, height: 70,),
-                                const SizedBox(height: 8,),
-                                Text(dataBulan[index].namaBulan, style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
-                                const SizedBox(height: 8,),
-                                Text(dataBulan[index].descriptonBulan),
+                                Image.network(dataListApi[index].avatar.toString(), width: 70, height: 70,),
+                                const SizedBox(width: 8,),
+                                Text(dataListApi[index].first_name.toString(), style:TextStyle(fontSize: 14, fontWeight: FontWeight.bold)),
+                                const SizedBox(width: 8,),
+                                Text(dataListApi[index].email.toString()),
 
-                              ],
-                            )
                           ],
                         ),
                       ),
                     );
                   },
-                  itemCount: dataBulan.length,
+                  itemCount: dataListApi.length,
                 ),
               ],
             ),

@@ -1,5 +1,11 @@
-import 'Model/DataBulan.dart';
+import 'dart:async';
+import 'dart:convert';
+import 'dart:html';
+
+import 'package:contoh/Model/ListModel.dart';
 import 'package:flutter/material.dart';
+import 'Model/DataBulan.dart';
+import 'package:http/http.dart' as http;
 
 class gridview extends StatefulWidget {
   const gridview({Key? key}) : super(key: key);
@@ -25,9 +31,40 @@ class _gridviewState extends State<gridview> {
     dataBulan.add(DataBulan(namaBulan: "Produk 9", descriptonBulan: "Sunlight", image: "https://images.tokopedia.net/img/cache/200-square/VqbcmM/2021/5/31/8ac36e37-d991-4997-82a7-e5eef677243e.jpg.webp?ect=4g"));
   }
 
+  List<Data> dataListApi = [];
+  final String apiUrl = "https://reqres.in/api/users?per_page=15";
+
+  Future<ListModel> getListRepository(BuildContext context) async {
+    var uri = Uri.parse(apiUrl).replace();
+    try {
+      final response = await http
+          .get(uri, headers: {})
+          .timeout(const Duration(seconds: 30));
+      if (response.statusCode == HttpStatus.ok){
+        print(jsonDecode(response.body));
+        return ListModel.FromJson(jsonDecode(response.body));
+      }else{
+        return ListModel.withError("Gagal load data");
+      }
+    } on TimeoutException catch (_) {
+      return ListModel.withError("Waktu habis, silahkan coba kembali");
+    }
+  }
+
+  void getListViewModel(BuildContext) async {
+    final response = await getListRepository(context);
+    if (response.error == null) {
+      setState(() {
+        dataListApi = response.data!;
+      });
+    } else{
+      print(response.error.toString());
+    }
+  }
+
   @override
   void initState() {
-    setData();
+    getListViewModel(context);
     super.initState();
   }
 
@@ -48,12 +85,12 @@ class _gridviewState extends State<gridview> {
               GridView.builder(
                 shrinkWrap: true,
                 physics: const NeverScrollableScrollPhysics(),
-                itemCount: dataBulan.length,
+                itemCount: dataListApi.length,
                 gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
                   crossAxisCount: MediaQuery.of(context).orientation ==
                       Orientation.landscape ? 3: 2,
-                  crossAxisSpacing: 4,
-                  mainAxisSpacing: 4,
+                  crossAxisSpacing: 1,
+                  mainAxisSpacing: 1,
                   childAspectRatio: (1 / 1),
                 ),
                 itemBuilder: (context,index,) {
@@ -66,14 +103,14 @@ class _gridviewState extends State<gridview> {
                         child: Card(
                           child: Container(
                             width: double.infinity,
-                            margin: const EdgeInsets.all(12),
+                            margin: const EdgeInsets.all(10),
                             child: Column(
                               children: [
-                                Image.network(dataBulan[index].image, width: 70, height: 70,),
-                                const SizedBox(height: 16,),
-                                Text(dataBulan[index].namaBulan, style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
+                                Image.network(dataListApi[index].avatar.toString(), width: 70, height: 70,),
                                 const SizedBox(height: 8,),
-                                Text(dataBulan[index].descriptonBulan),
+                                Text(dataListApi[index].first_name.toString(), style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
+                                const SizedBox(height: 8,),
+                                Text(dataListApi[index].email.toString()),
                               ],
                             ),
                           ),

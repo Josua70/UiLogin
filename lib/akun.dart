@@ -17,14 +17,10 @@ class _akunState extends State<akun> {
       body: Container(
         margin: EdgeInsets.all(8),
         child: Column(
-\
-                  fontSize: 20,
+
 
               ),
             ),
-          ],
-        ),
-      ),
     );
   }
 }
