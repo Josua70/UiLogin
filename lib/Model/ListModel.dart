@@ -19,7 +19,7 @@ class ListModel{
 
   ListModel.FromJson(Map<String, dynamic> json){
     page = json['page'];
-    perPage = json ['per_page'];
+    perPage = json ['per_Page'];
     total = json['total'];
     totalPages = json['total_pages'];
     if (json['data'] != null) {
@@ -45,16 +45,16 @@ class ListModel{
 class Data{
   int? id;
   String? email;
-  String? first_name;
+  String? firstName;
   String? lastName;
   String? avatar;
 
-  Data({this.id, this.email, this.first_name, this.lastName, this.avatar});
+  Data({this.id, this.email, this.firstName, this.lastName, this.avatar});
 
   Data.fromJson(Map<String, dynamic> json) {
     id = json['id'];
     email = json['email'];
-    first_name = json['first_name'];
+    firstName = json['firstName'];
     lastName = json['lastName'];
     avatar = json['avatar'];
   }
@@ -63,7 +63,7 @@ class Data{
     final Map<String, dynamic> data = new Map<String, dynamic>();
     data['id'] = this.id;
     data['email'] = this.email;
-    data['first_name'] = this.first_name;
+    data['first_name'] = this.firstName;
     data['lastName'] = this.lastName;
     data['avatar'] = this.avatar;
     return data;

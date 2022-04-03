@@ -1,3 +1,5 @@
+//model dari generate
+
 class ListModelGenerate {
   int? page;
   int? perPage;

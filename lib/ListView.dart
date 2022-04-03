@@ -1,7 +1,6 @@
 import 'dart:async';
 import 'dart:convert';
 import 'dart:html';
-
 import 'package:contoh/Model/ListModel.dart';
 import 'package:flutter/material.dart';
 import 'Model/DataBulan.dart';
@@ -9,14 +8,14 @@ import 'package:http/http.dart' as http;
 
 
 
-class screen3 extends StatefulWidget {
-  const screen3({Key? key}) : super(key: key);
+class Listview extends StatefulWidget {
+  const Listview({Key? key}) : super(key: key);
 
   @override
-  _screen3State createState() => _screen3State();
+  _ListviewState createState() => _ListviewState();
 }
 
-class _screen3State extends State<screen3> {
+class _ListviewState extends State<Listview> {
   final List bulan = [
     "Januari",
     "Fabruari",
@@ -127,7 +126,7 @@ class _screen3State extends State<screen3> {
                                       const SizedBox(height: 8,),
                                       Image.network(dataListApi[index].avatar.toString(), width: 70, height: 70,),
                                       const SizedBox(height: 8,),
-                                      Text(dataListApi[index].first_name.toString(), style: const TextStyle(fontSize: 14, fontWeight: FontWeight.bold)),
+                                      Text(dataListApi[index].firstName.toString(), style: const TextStyle(fontSize: 14, fontWeight: FontWeight.bold)),
                                       const SizedBox(height: 8,),
                                       Text(dataListApi[index].email.toString()),
                                     ],
@@ -150,13 +149,14 @@ class _screen3State extends State<screen3> {
                   itemBuilder: (context, index) {
                     return Card(
                       child: Container(
-                        margin:  const EdgeInsets.all(8),
+                        margin: const EdgeInsets.all(8),
                         child: Row(
                           children: [
+                            // Image.asset("assets/google_icon.png", width: 70, height: 70,),
                                 Image.network(dataListApi[index].avatar.toString(), width: 70, height: 70,),
-                                const SizedBox(width: 8,),
-                                Text(dataListApi[index].first_name.toString(), style:TextStyle(fontSize: 14, fontWeight: FontWeight.bold)),
-                                const SizedBox(width: 8,),
+                                const SizedBox(height: 8,),
+                                Text(dataListApi[index].firstName.toString(), style: const TextStyle(fontSize: 14, fontWeight: FontWeight.bold)),
+                                const SizedBox(height: 8,),
                                 Text(dataListApi[index].email.toString()),
 
                           ],

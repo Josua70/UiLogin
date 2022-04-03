@@ -1,7 +1,6 @@
 import 'dart:async';
 import 'dart:convert';
 import 'dart:html';
-
 import 'package:contoh/Model/ListModel.dart';
 import 'package:flutter/material.dart';
 import 'Model/DataBulan.dart';
@@ -108,7 +107,7 @@ class _gridviewState extends State<gridview> {
                               children: [
                                 Image.network(dataListApi[index].avatar.toString(), width: 70, height: 70,),
                                 const SizedBox(height: 8,),
-                                Text(dataListApi[index].first_name.toString(), style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
+                                Text(dataListApi[index].firstName.toString(), style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
                                 const SizedBox(height: 8,),
                                 Text(dataListApi[index].email.toString()),
                               ],

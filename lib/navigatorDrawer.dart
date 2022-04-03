@@ -19,7 +19,7 @@ class navigatorDrawer extends StatelessWidget {
               text: 'Daftar Produk',
               onTap: () {
                 Navigator.pop(context);
-                Navigator.push(context, MaterialPageRoute(builder: (_) => const screen3()));
+                Navigator.push(context, MaterialPageRoute(builder: (_) => const Listview()));
               }),
           _drawerItem(
               icon: Icons.group,

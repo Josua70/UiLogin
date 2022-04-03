@@ -105,7 +105,7 @@ class _registerState extends State<register> {
             const SizedBox(height: 36,),
             ElevatedButton(
                 onPressed: (){
-                Navigator.push(context, MaterialPageRoute(builder: (context) =>screen3()));
+                Navigator.push(context, MaterialPageRoute(builder: (context) =>Listview()));
                 },
                 child: Text("Register")
             ),
